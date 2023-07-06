@@ -1,19 +1,24 @@
-// import css from './Loader.module.css'
+import css from './Loader.module.css'
 import React from 'react';
-// import PropTypes from "prop-types";
+import { FallingLines } from  'react-loader-spinner'
+import PropTypes from "prop-types";
 
-import { Audio } from  'react-loader-spinner'
+export const Loader = () => {
+  return (
+    <div className={css.loader}>
+<FallingLines
+  color="#3f51b5"
+  width="150"
+  visible={true}
+  ariaLabel='falling-lines-loading'
+/>
+    </div>
+  )
+}
 
-<Audio
-    height = "80"
-    width = "80"
-    radius = "9"
-    color = 'green'
-    ariaLabel = 'three-dots-loading'     
-    wrapperStyle
-    wrapperClass
-  />
-
-// export const Loader = ({}) => {
-//  <div></div>
-// } 
+FallingLines.propTypes = {
+  color: PropTypes.string.isRequired,
+    width: PropTypes.string.isRequired,
+    visible: PropTypes.bool.isRequired,
+    ariaLabel: PropTypes.string.isRequired
+}

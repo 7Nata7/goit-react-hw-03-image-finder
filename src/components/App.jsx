@@ -1,11 +1,30 @@
 import { Component } from 'react';
+
 import css from './App.module.css';
+
+// import "react-toastify/dist/ReactToastify.css";
+import { toast } from 'react-toastify';
+
 import { Button } from './Button';
 import { ImageGallery } from './ImageGallery';
-// import { Loader } from './Loader';
+import { Loader } from './Loader';
 import { Searchbar } from './Searchbar';
 import { Modal } from './Modal';
 import { fetchImages } from './services/api';
+
+
+const toastConfig = {
+  position: "top-center",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "colored",
+}
+
+
 
 export class App extends Component {
 state = {
@@ -35,13 +54,18 @@ onCloseModal = () => {
 
   async componentDidMount() {
     try {
+      this.setState({ isLoading: true })
       const { hits } = await fetchImages();
       // console.log(images)
       this.setState({ images: hits })
+toast.success('Wow! It`s success', toastConfig)
+
+
     } catch (error) {
-
+this.setState({ error: error.message});
+toast.error('Something get wrong. Please try again', toastConfig)
     } finally {
-
+      this.setState({ isLoading: false })
     }
   }
 // async componentDidMount() {
@@ -59,27 +83,27 @@ onCloseModal = () => {
 // }
 
   render() {
-    // const { images, isLoading, error } = this.state;
-    // const { images } = this.state;
-    const { images, largeImage, 
-      // showModal, 
-      // isLoading, 
+    const { images, largeImage, modal, isLoading, 
       // loadMore, 
-      error } =
-      this.state;
+      // error 
+    } = this.state;
+
+
+      
     return (
       <div className={css.App}>
-        
-        <Searchbar />
 
-        {error && (
-          <p className="errorMessage">Whoops, something went wrong: {error}</p>
-        )}
+        <Searchbar />
+        {isLoading && (
+<Loader />
+)}
+
+        {/* {error !== null && <p className="errorMessage"></p>} */}
         {images.length > 0 && (
           <ImageGallery images={images} onOpenModal={this.onOpenModal} />
         )}
 
-        {this.state.modal.isOpen && (
+        {modal.isOpen && (
           <Modal
             onCloseModal={this.onCloseModal}
             visibleData={this.state.modal.visibleData}
@@ -88,23 +112,12 @@ onCloseModal = () => {
           />
         )}
 
-{/* <ImageGallery 
-// images={this.state.images}
-images={images}
-/> */}
-{/* <ImageGallery images={images} onOpenModal={this.onOpenModal} /> */}
-
-{/* {images.length > 0 && (
-          <ImageGallery images={images} onOpenModal={this.onOpenModal} />
-        )} */}
-
-
-{/* <Loader /> */}
 <Button />
 {/* <Modal /> */}
 
 
       </div>
+      
     )
   }
 }
