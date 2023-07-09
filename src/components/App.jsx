@@ -57,24 +57,31 @@ export class App extends Component {
     }));
   };
 
-  formSubmit = searchQuery => {
-    this.setState({ searchQuery });
-  };
 
+  formSubmit = searchQuery => {
+    if (this.state.searchQuery === searchQuery) {
+      toast.warn('It`s the same query', toastConfig);
+
+      return;
+    }
+  
+    this.setState({ searchQuery, page: 1, images: [] });
+  };
+  
   async componentDidUpdate(prevProps, prevState) {
     const { searchQuery, page } = this.state;
     const prevSearchQuery = prevState.searchQuery;
     const prevPage = prevState.page;
-
+  
     if (searchQuery !== prevSearchQuery || prevPage !== page) {
       try {
         this.setState({ isLoading: true });
         const images = await fetchImages(searchQuery, page);
-
+  
         const totalHits = images.totalHits;
         const totalPages = Math.ceil(totalHits / 12);
         const isMorePages = page < totalPages;
-
+  
         if (prevSearchQuery !== searchQuery) {
           this.setState({ images: images.hits, loadMoreBtn: isMorePages });
         } else {
@@ -83,27 +90,27 @@ export class App extends Component {
             loadMoreBtn: isMorePages,
           });
         }
-
+  
         if (images.hits.length === 0) {
           toast.warn('No images', toastConfig);
         }
-
+  
         if (page === 1 && images.hits.length > 0) {
           toast.success('Wow! It`s success', toastConfig);
         }
-
+  
         if (page === totalPages) {
           this.setState({ loadMoreBtn: false });
         }
       } catch (error) {
         this.setState({ error: error.message });
-        toast.error('Something get wrong. Please try again', toastConfig);
+        toast.error('Something went wrong. Please try again', toastConfig);
       } finally {
         this.setState({ isLoading: false });
       }
     }
   }
-
+  
   render() {
     const { images, isLoading, loadMoreBtn, modal } = this.state;
 

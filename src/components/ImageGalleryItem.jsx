@@ -7,7 +7,7 @@ export const ImageGalleryItem = ({ image, onOpenModal }) => {
   };
 
   return (
-    <li className={css.galleryItem} key={image.id} onClick={onImageClick}>
+    <li className={css.galleryItem} onClick={onImageClick}>
       <img
         className={css.imageGalleryItemImage}
         src={image.webformatURL}
@@ -19,7 +19,6 @@ export const ImageGalleryItem = ({ image, onOpenModal }) => {
 
 ImageGalleryItem.propTypes = {
   image: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     webformatURL: PropTypes.string.isRequired,
     tags: PropTypes.string.isRequired,
     largeImageURL: PropTypes.string.isRequired,
