@@ -24,10 +24,10 @@ export class Modal extends React.Component {
   }
 
   render() {
-    const { imgURL, onCloseModal } = this.props;
+    const { imgURL } = this.props;
     return (
       <div className={css.overlay} onClick={this.overlayClick}>
-        <div className={css.modal} onCloseModal={onCloseModal}>
+        <div className={css.modal} >
           <img src={imgURL} alt="" />
         </div>
       </div>
